@@ -1,13 +1,54 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Header from "./Header";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 const Login = () => {
-  // State to track sign-in or sign-up form
   const [isSignInForm, setIsSignInForm] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  // Toggle between Sign In and Sign Up
+  const name = useRef(null);
+  const email = useRef(null);
+  const password = useRef(null);
+
   const toggleSignInForm = () => {
-    setIsSignInForm((prevState) => !prevState);
+    setIsSignInForm(!isSignInForm);
+  };
+
+  const handleButtonClick = (e) => {
+    e.preventDefault();
+    const emailValue = email.current.value;
+    const passwordValue = password.current.value;
+
+    if (!isSignInForm) {
+      // Sign Up Logic
+      createUserWithEmailAndPassword(auth, emailValue, passwordValue)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          updateProfile(user, {
+            displayName: name.current.value,
+          }).catch((error) => {
+             setErrorMessage(error.message);
+          });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage);
+        });
+    } else {
+      // Sign In Logic
+      signInWithEmailAndPassword(auth, emailValue, passwordValue)
+        .then((userCredential) => {
+          // Signed in 
+          const user = userCredential.user;
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage("Invalid credentials. Please try again.");
+        });
+    }
   };
 
   return (
@@ -19,48 +60,41 @@ const Login = () => {
           alt="logo"
         />
       </div>
-      <form className="w-3/12 absolute p-12 bg-black my-36 mx-auto right-0 left-0 text-white rounded-lg bg-opacity-85">
+      <form onSubmit={(e) => e.preventDefault()} className="w-full md:w-3/12 absolute p-12 bg-black my-36 mx-auto right-0 left-0 text-white rounded-lg bg-opacity-85">
         <h1 className="font-bold text-3xl py-4">
           {isSignInForm ? "Sign In" : "Sign Up"}
         </h1>
+
         {!isSignInForm && (
           <input
+            ref={name}
             type="text"
             placeholder="Full Name"
-            className="p-2 my-4 w-full bg-gray-700"
+            className="p-4 my-4 w-full bg-gray-700 rounded"
           />
         )}
-         {!isSignInForm && (
-          <input
-            type="text"
-            placeholder="Phone no"
-            className="p-2 my-4 w-full bg-gray-700"
-          />
-        )}
-
-
         <input
+          ref={email}
           type="text"
           placeholder="Email Address"
-          className="p-2 my-4 w-full bg-gray-700"
+          className="p-4 my-4 w-full bg-gray-700 rounded"
         />
-
-       {isSignInForm && (
-        <input 
+        <input
+          ref={password}
           type="password"
           placeholder="Password"
-          className="p-2 my-4 w-full bg-gray-700"
+          className="p-4 my-4 w-full bg-gray-700 rounded"
         />
-       )}
-        
-
-        <button className="p-4 my-6 bg-red-700 w-full rounded-lg">
+        <p className="text-red-500 font-bold text-lg py-2">{errorMessage}</p>
+        <button 
+          className="p-4 my-6 bg-red-700 w-full rounded-lg"
+          onClick={handleButtonClick}
+        >
           {isSignInForm ? "Sign In" : "Sign Up"}
         </button>
-        
         <p className="py-4">
           {isSignInForm ? "New to Netflix?" : "Already have an account?"}{" "}
-          <span className="text-red-500 cursor-pointer" onClick={toggleSignInForm}>
+          <span className="text-white cursor-pointer hover:underline" onClick={toggleSignInForm}>
             {isSignInForm ? "Sign up now" : "Sign in"}
           </span>
         </p>
