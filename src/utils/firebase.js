@@ -4,7 +4,7 @@ import { getFirestore } from "firebase/firestore";
 
 // TODO: ADD YOUR OWN FIREBASE CONFIGURATION HERE
 const firebaseConfig = {
-  apiKey: "AIzaSyDBX3bGm_KoUz6bS6O_4R6YowCDJVVtYjg",
+  apiKey: "AIzaSyDBX3bGm_KoUz6bS6O_4R6YowCDJVVtYyg",
   authDomain: "netflix-f2216.firebaseapp.com",
   projectId: "netflix-f2216",
   storageBucket: "netflix-f2216.firebasestorage.app",

@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import Header from "./Header";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../utils/firebase";
+import { checkValidData } from "../utils/validate";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
@@ -17,8 +18,23 @@ const Login = () => {
 
   const handleButtonClick = (e) => {
     e.preventDefault();
-    const emailValue = email.current.value;
+    
+    // Automatically remove any accidental spaces at the beginning or end of the email
+    const emailValue = email.current.value.trim();
     const passwordValue = password.current.value;
+
+    // Validate email format
+    const message = checkValidData(emailValue, passwordValue);
+    if (message) {
+      setErrorMessage(message);
+      return;
+    }
+
+    // Firebase requires passwords to be exactly 6 characters or longer
+    if (passwordValue.length < 6) {
+      setErrorMessage("Password must be at least 6 characters (any letters or numbers).");
+      return;
+    }
 
     if (!isSignInForm) {
       // Sign Up Logic
@@ -32,20 +48,15 @@ const Login = () => {
           });
         })
         .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          setErrorMessage(errorCode + "-" + errorMessage);
+          setErrorMessage(error.message);
         });
     } else {
       // Sign In Logic
       signInWithEmailAndPassword(auth, emailValue, passwordValue)
-        .then((userCredential) => {
-          // Signed in 
-          const user = userCredential.user;
+        .then(() => {
+          // Successfully Signed in 
         })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
+        .catch(() => {
           setErrorMessage("Invalid credentials. Please try again.");
         });
     }
