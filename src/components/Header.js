@@ -16,7 +16,7 @@ const Header = () => {
         const { uid, email, displayName } = user;
         dispatch(addUser({ uid: uid, email: email, displayName: displayName }));
         if (window.location.pathname === "/") {
-            navigate("/browse");
+          navigate("/browse");
         }
       } else {
         dispatch(removeUser());
@@ -30,7 +30,7 @@ const Header = () => {
 
   const handleSignOut = () => {
     signOut(auth)
-      .then(() => {})
+      .then(() => { })
       .catch((error) => {
         console.error(error);
       });

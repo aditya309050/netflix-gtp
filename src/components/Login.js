@@ -18,7 +18,7 @@ const Login = () => {
 
   const handleButtonClick = (e) => {
     e.preventDefault();
-    
+
     // Automatically remove any accidental spaces at the beginning or end of the email
     const emailValue = email.current.value.trim();
     const passwordValue = password.current.value;
@@ -44,7 +44,7 @@ const Login = () => {
           updateProfile(user, {
             displayName: name.current.value,
           }).catch((error) => {
-             setErrorMessage(error.message);
+            setErrorMessage(error.message);
           });
         })
         .catch((error) => {
@@ -97,7 +97,7 @@ const Login = () => {
           className="p-4 my-4 w-full bg-gray-700 rounded"
         />
         <p className="text-red-500 font-bold text-lg py-2">{errorMessage}</p>
-        <button 
+        <button
           className="p-4 my-6 bg-red-700 w-full rounded-lg"
           onClick={handleButtonClick}
         >
