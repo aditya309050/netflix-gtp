@@ -2,18 +2,16 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// TODO: ADD YOUR OWN FIREBASE CONFIGURATION HERE
 const firebaseConfig = {
-  apiKey: "AIzaSyDBX3bGm_KoUz6bS6O_4R6YowCDJVVtYyg",
-  authDomain: "netflix-f2216.firebaseapp.com",
-  projectId: "netflix-f2216",
-  storageBucket: "netflix-f2216.firebasestorage.app",
-  messagingSenderId: "836251547657",
-  appId: "1:836251547657:web:0ffe310521d7654e8a60d8",
-  measurementId: "G-RP06CLNBWT"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "AIzaSyDBX3bGm_KoUz6bS6O_4R6YowCDJVVtYyg",
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN || "netflix-f2216.firebaseapp.com",
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID || "netflix-f2216",
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET || "netflix-f2216.firebasestorage.app",
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID || "836251547657",
+  appId: process.env.REACT_APP_FIREBASE_APP_ID || "1:836251547657:web:0ffe310521d7654e8a60d8",
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID || "G-RP06CLNBWT"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
